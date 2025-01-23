@@ -21,8 +21,9 @@ const userSchema = mongoose.Schema(
       default: "",
     },
     googleId: {
-      type: mongoose.Types.UUID,
+      type: String,
       required: true,
+      unique: true,
     },
   },
   { timestamps: true }
