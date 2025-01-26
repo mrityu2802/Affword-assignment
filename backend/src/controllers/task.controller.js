@@ -79,40 +79,33 @@ export const deleteTask = async (req, res) => {
   }
 };
 
-export const deleteMultipleTasks = async (req, res) => {
-  const { ids } = req.body;
-  console.log(ids);
+export const updateTask = async (req, res) => {
+  const { id } = req.params;
+  // const { task, description, status } = req.body;
+  const updates = req.body;
+  if (!updates || Object.keys(updates).length === 0) {
+    return res.status(400).json({ message: "No fields provided for update" });
+  }
+
   try {
-    if (!Array.isArray(ids) || ids.length === 0) {
-      return res
-        .status(400)
-        .json({ message: "Invalid request: Provide an array of task IDs" });
-    }
+    const updatedTask = await Task.findByIdAndUpdate(
+      id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
 
-    const invalidIds = ids.filter((id) => !mongoose.Types.ObjectId.isValid(id));
-    if (invalidIds.length > 0) {
-      return res
-        .status(400)
-        .json({ message: `Invalid Task ID(s): ${invalidIds.join(", ")}` });
-    }
-
-    const result = await Task.deleteMany({
-      _id: { $in: ids },
-      googleId: req.user.googleId,
-    });
-
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ message: "No tasks found to delete" });
+    if (!updatedTask) {
+      return res.status(404).json({ message: "Task not found" });
     }
 
     const tasks = await Task.find({ googleId: req.user.googleId });
     res.status(200).json({
-      message: `${result.deletedCount} task(s) deleted successfully`,
-      deletedIds: ids,
+      message: "Task updated successfully",
+      updatedTask: updatedTask,
       tasks,
     });
   } catch (error) {
-    console.error("Error deleting tasks:", error.message);
+    console.error("Error updating  tasks:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

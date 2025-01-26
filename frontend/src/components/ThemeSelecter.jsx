@@ -21,7 +21,7 @@ const ThemeSelecter = () => {
         </svg>
         <ul
           tabIndex={0}
-          className="dropdown-content menu-dropdown flex flex-col bg-base-300 rounded-box z-[1] max-h-[30rem] min-w-[10rem] m-1 overflow-auto p-2 shadow-2xl"
+          className="dropdown-content menu-dropdown flex flex-col bg-base-300 rounded-box z-[1] max-h-[90vh] min-w-[10rem] m-1 overflow-auto p-2 shadow-2xl"
         >
           {THEMES.map((t) => (
             <li key={t} className="w-full">

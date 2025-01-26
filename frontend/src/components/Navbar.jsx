@@ -1,13 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import {
-  ListTodo,
-  LogOut,
-  MessageSquare,
-  PanelLeftDashed,
-  Settings,
-  User,
-} from "lucide-react";
+import { ListTodo, LogOut, MessageSquare, User } from "lucide-react";
 import ThemeSelecter from "./ThemeSelecter";
 
 const Navbar = () => {
@@ -36,10 +29,42 @@ const Navbar = () => {
                   <ListTodo className="size-5" />
                   <span className="hidden sm:inline">Tasks</span>
                 </Link>
-                <button className="flex gap-2 items-center" onClick={logOut}>
-                  <LogOut className="size-5" />
-                  <span className="hidden sm:inline">Logout</span>
-                </button>
+
+                <div className="avatar dropdown dropdown-end">
+                  <div
+                    tabIndex={0}
+                    role="button"
+                    className="size-8 rounded-full"
+                  >
+                    <img
+                      src={
+                        authUser?.profilePic ||
+                        import.meta.env.VITE_FALLBACK_IMAGE_URL
+                      }
+                      alt="profile Picture"
+                    />
+                  </div>
+                  <ul
+                    tabIndex={0}
+                    className="dropdown-content menu bg-base-100 rounded-box z-[1] min-w-fit m-1 p-2 shadow"
+                  >
+                    <li>
+                      <Link to={"/profile"}>
+                        <User className="size-5" />
+                        <span className="inline">Profile</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        className="flex gap-2 items-center"
+                        onClick={logOut}
+                      >
+                        <LogOut className="size-5" />
+                        <span className="inline">Logout</span>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
               </>
             )}
           </div>
@@ -50,3 +75,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* For Webkit-based browsers (Chrome, Safari, Edge, etc.) */
+.no-scroll::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+.no-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.no-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* For Firefox */
+.no-scroll {
+  scrollbar-width: none;
+  overflow: -moz-scrollbars-none;
+}
+
+/* For Internet Explorer */
+.no-scroll {
+  -ms-overflow-style: none;
+}
+
+/* For Opera */
+.no-scroll::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}

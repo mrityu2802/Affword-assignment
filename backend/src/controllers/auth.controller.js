@@ -44,6 +44,7 @@ export const signUp = async (req, res) => {
           name: newUser.name,
           email: newUser.email,
           profilePic: newUser.profilePic,
+          createdAt: newUser.createdAt,
         },
       });
     } else {
@@ -90,6 +91,7 @@ export const loginWithCredential = async (req, res) => {
         name: user.name,
         email: user.email,
         profilePic: user.profilePic,
+        createdAt: user.createdAt,
       },
     });
   } catch (error) {
@@ -144,6 +146,7 @@ export const getAuthenticatedUser = async (req, res, next) => {
           name: user.name,
           email: user.email,
           profilePic: user.profilePic,
+          createdAt: user.createdAt,
         },
         message: "User authenticated successfully",
       });
@@ -152,5 +155,41 @@ export const getAuthenticatedUser = async (req, res, next) => {
     }
   } catch (error) {
     return next(error);
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { profilePic } = req.body;
+    const userId = req.user.userId;
+    const googleId = req.user.googleId;
+    console.log(req.user);
+
+    if (!profilePic) {
+      return res.status(400).json({ message: "Profile picture is required" });
+    }
+    const uploadResponse = await cloudinary.uploader.upload(profilePic, {
+      folder: `profile/${googleId}`,
+    });
+    console.log(uploadResponse.secure_url);
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        profilePic: uploadResponse.secure_url,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      googleId: updatedUser.googleId,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      profilePic: updatedUser.profilePic,
+      createdAt: updatedUser.createdAt,
+    });
+  } catch (error) {
+    console.log("Error in update profile", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

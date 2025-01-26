@@ -18,13 +18,24 @@ const userSchema = mongoose.Schema(
     },
     profilePic: {
       type: String,
-      default: "",
+      default:
+        "https://res.cloudinary.com/djior6ety/image/upload/f_auto,q_auto/khfpjw08pirc7cvmfipn",
     },
     googleId: {
       type: String,
       required: true,
       unique: true,
     },
+    followers: [
+      {
+        type: String,
+      },
+    ],
+    following: [
+      {
+        type: String,
+      },
+    ],
   },
   { timestamps: true }
 );

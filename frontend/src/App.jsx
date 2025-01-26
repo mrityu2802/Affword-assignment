@@ -8,8 +8,9 @@ import { firebaseApp } from "./utils/firebaseConfig";
 import { useAuthStore } from "./store/useAuthStore.js";
 import { useThemeStore } from "./store/useThemeStore.js";
 import { useEffect } from "react";
-import { Loader } from "lucide-react";
 import TaskPage from "./pages/TaskPage.jsx";
+import ScreenLoader from "./components/Loader.jsx";
+import Profile from "./pages/Profile.jsx";
 
 const App = () => {
   const { authUser, checkAuth, isLoading } = useAuthStore();
@@ -20,36 +21,42 @@ const App = () => {
     // console.log(authUser);
   }, [checkAuth]);
 
-  if (isLoading && !authUser) {
+  const AppRoutes = ({ isLoading, authUser }) => {
+    if (isLoading) {
+      return <ScreenLoader />;
+    }
+
     return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader className="size-10 animate-spin" />
-      </div>
+      <Routes>
+        <Route
+          path="/"
+          element={authUser ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/signup"
+          element={!authUser ? <SignUp /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/login"
+          element={!authUser ? <LoginPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/tasks"
+          element={authUser ? <TaskPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/profile"
+          element={authUser ? <Profile /> : <Navigate to="/login" />}
+        />
+      </Routes>
     );
-  }
+  };
 
   return (
     <div data-theme={theme}>
       <Toaster />
       <Navbar />
-      <Routes>
-        <Route
-          path="/"
-          element={authUser ? <HomePage /> : <Navigate to={"/login"} />}
-        />
-        <Route
-          path="/signup"
-          element={!authUser ? <SignUp /> : <Navigate to={"/"} />}
-        />
-        <Route
-          path="/login"
-          element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
-        />
-        <Route
-          path="/tasks"
-          element={authUser ? <TaskPage /> : <Navigate to={"/login"} />}
-        />
-      </Routes>
+      <AppRoutes isLoading={isLoading} authUser={authUser} />
     </div>
   );
 };
