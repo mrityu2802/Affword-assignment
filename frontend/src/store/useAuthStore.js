@@ -28,11 +28,11 @@ export const useAuthStore = create((set, get) => ({
       });
 
       set({ authUser: res.data.user });
-      toast.success("Authentication verified");
+      // toast.success("Authentication verified");
     } catch (error) {
       console.error("Error in checkAuth:", error.message);
       set({ authUser: null });
-      toast.error("Failed to verify authentication");
+      // toast.error("Failed to verify authentication");
     } finally {
       set({ isLoading: false });
     }
