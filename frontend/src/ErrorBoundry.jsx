@@ -22,7 +22,7 @@ export default class ErrorBoundry extends Component {
         <Fragment>
           <section
             style={{ height: "100vh", overflow: "auto" }}
-            className="flex flex-column justify-content-center align-items-center"
+            className="flex flex-col justify-center items-center"
           >
             <img
               style={{
