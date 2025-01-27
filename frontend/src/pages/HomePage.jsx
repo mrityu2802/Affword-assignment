@@ -5,9 +5,11 @@ import { Link } from "react-router-dom";
 import Modal from "../components/Modal";
 import { usePostStore } from "../store/usePostStore";
 import Post from "../components/Post";
+import ScreenLoader from "../components/Loader";
 const HomePage = () => {
   const { authUser } = useAuthStore();
-  const { uploadPost, isPosting, postList, getPost } = usePostStore();
+  const { uploadPost, isPosting, postList, getPost, isFetchingPost } =
+    usePostStore();
   const [formData, setFormData] = useState({ caption: "", picture: "" });
   const modalRef = useRef(null);
 
@@ -141,14 +143,20 @@ const HomePage = () => {
         </Modal>
       </div>
       <div className="py-1 flex flex-col gap-8 w-full items-center mt-4">
-        {postList.map((post) => (
-          <Post
-            key={post._id}
-            authUser={authUser}
-            caption={post.caption}
-            imageUrl={post.pictureUrl}
-          />
-        ))}
+        {postList.length ? (
+          postList.map((post) => (
+            <Post
+              key={post._id}
+              authUser={authUser}
+              caption={post.caption}
+              imageUrl={post.pictureUrl}
+            />
+          ))
+        ) : isFetchingPost ? (
+          <ScreenLoader />
+        ) : (
+          <span>No post to display</span>
+        )}
       </div>
     </main>
   );
